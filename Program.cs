@@ -1,39 +1,28 @@
-﻿using System.Text.Json;
+﻿namespace program;
+using apiconnection;
+using userHandling;
+using jsonhandling;
+
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using jsonhandling;
 
 public class Program {
 
     static void Main(string[] args) {
-        List<Data> _data = new List<Data>();
-        _data.Add(new Data()
-        {
-            id = 1,
-            SSN = 2,
-            Message = "A Message"
-        });
 
-        _data.Add(new Data()
-        {
-            id = 13,
-            SSN = 22,
-            Message = "A Messdsadasdasdasdage"
-        });
 
-        _data.Add(new Data()
-        {
-            id = 121321,
-            SSN = 12,
-            Message = "A DASDADASD"
-        });
+        Console.WriteLine("Do you want to add singular or multiple entries to your log?");
+        string amountEntriesAnswer = Console.ReadLine().ToLower();
+        if(amountEntriesAnswer == "singular") {
+            UserHandling.AddSingularEntry();
+        }
 
-        string json = JsonSerializer.Serialize(_data);
-        File.WriteAllText("config.json", json);
+        JsonHandling.ReadJson();
+
+
+        
     
     }
 }
 
-public class Data {
-    public int id {get; set;}
-    public int SSN {get; set;}
-    public string Message {get; set;}
-}
