@@ -24,8 +24,6 @@ public class UserHandling {
     public static int windToList;
     public static bool sunnyToList;
     public static bool cloudyToList;
-
-
     #endregion
 
     #region Helper variables
@@ -39,57 +37,97 @@ public class UserHandling {
     #region Functions for entry of data
 
     public static List<Day> AddSingularEntry() {
-        
-        Console.WriteLine("What day do you want to add to the log?");
-        string decision = Console.ReadLine().ToLower();
-
-        if(decisionForDays.Contains(decision)) {
-            specificDayChoice = true;
-        }
-
-        if(decision == "today") {
-            AddTodayToLog();
-        } else if (decision == "tomorrow") {
-            AddTomorrowToLog();
-        } else if (decision == "yesterday") {
-            AddYesterdayToLog();
-        }
-
-        if(!specificDayChoice) {
-            Console.WriteLine("What is the date of the day you want to add? dd/mm/yyyy");
-            string dateInput = Console.ReadLine().ToLower();
-
-            while(!VerifyDateFormat(dateInput)) {
-                Console.WriteLine("Input correct format for date, dd/mm/yyyy");
-                dateInput = Console.ReadLine().ToLower();
+        try {
+            Console.WriteLine("What day do you want to add to the log?");
+            string decision = Console.ReadLine().ToLower();
+            while(!daysOfTheWeek.Contains(decision) && !decisionForDays.Contains(decision)) { 
+                Console.WriteLine("That is not a valid day?? Input a valid one!");
+                decision = Console.ReadLine().ToLower();
             }
 
-            dateToList = dateInput;
+            if(decisionForDays.Contains(decision)) {
+                specificDayChoice = true;
+            }
 
-            if(DateTime.TryParseExact(dateInput, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime date)) {
-                dayToList = date.DayOfWeek.ToString();
+            if(decision == "today") {
+                AddTodayToLog();
+            } else if (decision == "tomorrow") {
+                AddTomorrowToLog();
+            } else if (decision == "yesterday") {
+                AddYesterdayToLog();
+            }
+
+            if(!specificDayChoice) {
+                Console.WriteLine("What is the date of the day you want to add? dd/mm/yyyy");
+                string dateInput = Console.ReadLine().ToLower();
+
+                while(!VerifyDateFormat(dateInput)) {
+                    Console.WriteLine("Input correct format for date, dd/mm/yyyy");
+                    dateInput = Console.ReadLine().ToLower();
+                }
+
+                dateToList = dateInput;
+
+                if(DateTime.TryParseExact(dateInput, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime date)) {
+                    dayToList = date.DayOfWeek.ToString();
+                } 
+            }
+
+            #region Date user input
+        
+            Console.WriteLine("What is the higest temp(c) of the day?");
+            string highestTempInput = Console.ReadLine();
+            while(!VerifyIntInput(highestTempInput)) {
+                Console.WriteLine("Not a valid int input!");
+                highestTempInput = Console.ReadLine(); 
             } 
+            highestTempToList = int.Parse(highestTempInput);
+
+            Console.WriteLine("What is the lowest temp(c) of the day?");
+            string lowestTempInput = Console.ReadLine();
+            while(!VerifyIntInput(lowestTempInput)) {
+                Console.WriteLine("Not a valid int input!");
+                lowestTempInput = Console.ReadLine(); 
+            } 
+            lowestTempToList = int.Parse(lowestTempInput);
+
+            Console.WriteLine("How much rainfall(mm) was it today?");
+            string rainfallInput = Console.ReadLine();
+            while(!VerifyIntInput(rainfallInput)) {
+                Console.WriteLine("Not a valid double input!");
+                rainfallInput = Console.ReadLine(); 
+            } 
+            rainfallToList = int.Parse(rainfallInput);
+
+            Console.WriteLine("How much wind(m/s) was it today?");
+            string windInput = Console.ReadLine();
+            while(!VerifyIntInput(windInput)) {
+                Console.WriteLine("Not a valid double input!");
+                windInput = Console.ReadLine(); 
+            } 
+            windToList = int.Parse(windInput);
+
+            Console.WriteLine("Was it sunny? true/false");
+            string sunnyInput = Console.ReadLine();
+            while(!VerifyBoolInput(sunnyInput)) {
+                Console.WriteLine("Not a valid boolean input!");
+                sunnyInput = Console.ReadLine(); 
+            } 
+            sunnyToList = bool.Parse(sunnyInput);
+
+            Console.WriteLine("Was it cloudy? true/false");
+            string cloudyInput = Console.ReadLine();
+            while(!VerifyBoolInput(cloudyInput)) {
+                Console.WriteLine("Not a valid boolean input!");
+                cloudyInput = Console.ReadLine(); 
+            } 
+            cloudyToList = bool.Parse(cloudyInput);
+
+            #endregion
+
+        } catch (Exception e) {
+            Console.WriteLine("Error in user input: " + e);
         }
-    
-        Console.WriteLine("The day is " + dayToList + " and the date is " + dateToList);
-
-        Console.WriteLine("What is the higest temp(c) of the day?");
-        highestTempToList = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("What is the lowest temp(c) of the day?");
-        lowestTempToList = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("How much rainfall(mm) was it today");
-        rainfallToList = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("how much wind(m/s) was it today?");
-        windToList = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("Was it sunny? true/false");
-        sunnyToList = bool.Parse(Console.ReadLine().ToLower());
-
-        Console.WriteLine("Was it cloudy? true/false");
-        cloudyToList = bool.Parse(Console.ReadLine().ToLower());
 
         
         OutputDataToJson(dateToList, dayToList, highestTempToList, lowestTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
@@ -132,6 +170,20 @@ public class UserHandling {
         return date.Length == 10 && date[2] == '/' && date[5] == '/';
     }
 
+    public static bool VerifyIntInput(string dataToBeVerified) {
+        if(int.TryParse(dataToBeVerified, out int value)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static bool VerifyBoolInput(string dataToBeVerified) {
+        if(bool.TryParse(dataToBeVerified, out bool value)) {
+            return true;
+        }
+        return false;
+    }
+
     public static void AddTodayToLog() {
         DayOfWeek todaysDay = DateTime.Now.DayOfWeek;
         dayToList = todaysDay.ToString();
@@ -155,8 +207,8 @@ public class UserHandling {
     #endregion
 
     public class Day {
-        public string date {get; set;}
-        public string day {get; set;}
+        public string date {get; set;} = string.Empty;
+        public string day {get; set;} = string.Empty;
         public int highestTemp {get; set;}
         public int lowestTemp {get; set;}
         public double rainfall {get; set;}
