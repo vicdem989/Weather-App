@@ -2,6 +2,7 @@ using System.Diagnostics.Contracts;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using jsonhandling;
 
 namespace userHandling;
 
@@ -36,7 +37,7 @@ public class UserHandling {
 
     #region Functions for entry of data
 
-    public static List<Day> AddSingularEntry() {
+    public static void AddSingularEntry() {
         try {
             Console.WriteLine("What day do you want to add to the log?");
             string decision = Console.ReadLine().ToLower();
@@ -129,15 +130,7 @@ public class UserHandling {
             Console.WriteLine("Error in user input: " + e);
         }
 
-        
         OutputDataToJson(dateToList, dayToList, highestTempToList, lowestTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
-
-        return null;
-
-    }
-
-    public static List<Day> AddMultipleEntries() {
-        return null;
     }
 
     public static void OutputDataToJson(string dateInput, string dayInput, int higestTempInput, int lowerTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
@@ -152,15 +145,14 @@ public class UserHandling {
                 sunny = sunnyInput,
                 cloudy = cloudyInput
             });
+
+            JsonHandling.OutputDataToJson(weatherLog);
+
         } catch (Exception e) {
             Console.WriteLine("Error when outputting to json file", e);
         }
 
-        string fileName = "WeatherForecast.json"; 
-        string jsonString = JsonSerializer.Serialize(weatherLog);
-        File.WriteAllText(fileName, jsonString);
         
-        Console.WriteLine("Log has been addewd to json!");
     }
 
     #endregion

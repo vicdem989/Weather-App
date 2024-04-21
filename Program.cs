@@ -11,7 +11,6 @@ public class Program {
 
     static void Main(string[] args) {
 
-
         Console.WriteLine("Do you want to add singular or multiple entries to your log?");
         string amountEntriesAnswer = Console.ReadLine().ToLower();
         if(amountEntriesAnswer == "singular") {
@@ -19,10 +18,6 @@ public class Program {
         }
 
         JsonHandling.ReadJson();
-
-
-        
-    
     }
 }
 
