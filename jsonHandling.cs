@@ -5,9 +5,19 @@ using program;
 using userHandling;
 
 public class JsonHandling {
-    
+
+    /// How to not fuck up past JSON files
+    /// check if JSON file exists
+    ///     if not, create a new one 
+    /// if it does, pull data from JSON into List<day>
+    /// put new day into said List<day> 
+    /// output new List to json
+    /// </unfucked done
+
+
+    public static string jsonFilePath = "WeatherLog.json";
     public static async void ReadJson() {
-            string jsonFilePath = "WeatherLog.json";
+            
             try {
                 string jsonString = File.ReadAllText(jsonFilePath);
 
@@ -24,11 +34,10 @@ public class JsonHandling {
 
     public static void OutputDataToJson(List<UserHandling.Day> listToBeOutputted) {
         try {
-        string fileName = "WeatherLog.json"; 
         string jsonString = JsonSerializer.Serialize(listToBeOutputted);
-        File.WriteAllText(fileName, jsonString);
+        File.WriteAllText(jsonFilePath, jsonString);
         
-        Console.WriteLine("Log has been addewd to json!");
+        Console.WriteLine("Log has been added to json!");
         } catch (Exception e) {
             Console.WriteLine("Error when outputting to JSON!", e);
         }
