@@ -29,6 +29,8 @@ public class Program {
 
     public static async Task MainAsync() {
         await ApiConnection.TestApi();
+        await ApiConnection.GetTemperatureForSpecificTime();
+        await ApiConnection.GetWindForSpecificTime();
     }
 }
 
