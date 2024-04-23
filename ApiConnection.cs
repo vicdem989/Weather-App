@@ -64,7 +64,7 @@ public class ApiConnection {
         }
     }
 
-    public static async Task GetPropertyForSpecifcTime(string parameter) {
+    public static async Task GetWindForSpecificTime() {
         using (JsonDocument doc = JsonDocument.Parse(responseBody)) {
             JsonElement root = doc.RootElement;
             JsonElement timeseriesArray = root.GetProperty("properties").GetProperty("timeseries");
@@ -73,7 +73,7 @@ public class ApiConnection {
             using (var enumerator = timeseriesArray.EnumerateArray()) {
                 while (enumerator.MoveNext()) {
                     var currentEntry = enumerator.Current;
-                    if (currentEntry.GetProperty("time").GetString() == "2024-04-23T20:00:00Z") {
+                    if (currentEntry.GetProperty("time").GetString() == "2024-04-23T19:00:00Z") {
                         entry = currentEntry;
                         break;
                     }
@@ -81,8 +81,8 @@ public class ApiConnection {
             }
 
             if (!entry.Equals(default)) {
-                double wind = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("parameter").GetDouble();
-                Console.WriteLine($"Wind at 20:00:00: {wind} m/s");
+                double wind = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("wind_speed").GetDouble();
+                Console.WriteLine($"Wind at 20:00:00: {wind}");
             } else {
                 Console.WriteLine("Temperature data not available for 20:00:00.");
             }

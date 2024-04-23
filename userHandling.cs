@@ -19,6 +19,7 @@ public class UserHandling {
     #region Variables for day data type
     public static string dayToList = string.Empty;
     public static string dateToList = string.Empty;
+    public static string timeToList = string.Empty;
     public static int highestTempToList;
     public static int lowestTempToList;
     public static double rainfallToList;
@@ -31,8 +32,6 @@ public class UserHandling {
 
     public static bool specificDayChoice = false;
 
-    
-    
     #endregion
 
     #region Functions for entry of data
@@ -130,14 +129,24 @@ public class UserHandling {
             Console.WriteLine("Error in user input: " + e);
         }
 
-        OutputDataToJson(dateToList, dayToList, highestTempToList, lowestTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
+        /// When adding new entry to log
+        /// Include time of entry
+        /// Get time from API and compare JSON data with inputted data from that time (hour)
+
+        //TimeSpan currentTime = DateTime.Now.TimeOfDay;
+        //timeToList = currentTime.ToString();
+        timeToList = string.Empty;
+
+
+        OutputDataToJson(dateToList, dayToList, timeToList, highestTempToList, lowestTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
     }
 
-    public static void OutputDataToJson(string dateInput, string dayInput, int higestTempInput, int lowerTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
+    public static void OutputDataToJson(string dateInput, string dayInput, string timeInput, int higestTempInput, int lowerTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
         try {
             weatherLog.Add(new Day(){
                 date = dateInput,
                 day = dayInput,
+                time = timeInput,
                 highestTemp = higestTempInput,
                 lowestTemp = lowerTempInput,
                 rainfall = rainfallInput, 
@@ -201,6 +210,7 @@ public class UserHandling {
     public class Day {
         public string date {get; set;} = string.Empty;
         public string day {get; set;} = string.Empty;
+        public string time {get; set;} = string.Empty;
         public int highestTemp {get; set;}
         public int lowestTemp {get; set;}
         public double rainfall {get; set;}
