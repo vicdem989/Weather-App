@@ -2,7 +2,9 @@ using System.Diagnostics.Contracts;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using apiconnection;
 using jsonhandling;
+using program;
 
 namespace userHandling;
 
@@ -20,8 +22,7 @@ public class UserHandling {
     public static string dayToList = string.Empty;
     public static string dateToList = string.Empty;
     public static string timeToList = string.Empty;
-    public static int highestTempToList;
-    public static int lowestTempToList;
+    public static int airTempToList;
     public static double rainfallToList;
     public static int windToList;
     public static bool sunnyToList;
@@ -36,7 +37,7 @@ public class UserHandling {
 
     #region Functions for entry of data
 
-    public static void AddSingularEntry() {
+    public static List<Day> AddSingularEntry() {
         try {
             Console.WriteLine("What day do you want to add to the log?");
             string decision = Console.ReadLine().ToLower();
@@ -75,21 +76,13 @@ public class UserHandling {
 
             #region Date user input
         
-            Console.WriteLine("What is the higest temp(c) of the day?");
-            string highestTempInput = Console.ReadLine();
-            while(!VerifyIntInput(highestTempInput)) {
+            Console.WriteLine("What is the air temp(c) currently");
+            string airTempInput = Console.ReadLine();
+            while(!VerifyIntInput(airTempInput)) {
                 Console.WriteLine("Not a valid int input!");
-                highestTempInput = Console.ReadLine(); 
+                airTempInput = Console.ReadLine(); 
             } 
-            highestTempToList = int.Parse(highestTempInput);
-
-            Console.WriteLine("What is the lowest temp(c) of the day?");
-            string lowestTempInput = Console.ReadLine();
-            while(!VerifyIntInput(lowestTempInput)) {
-                Console.WriteLine("Not a valid int input!");
-                lowestTempInput = Console.ReadLine(); 
-            } 
-            lowestTempToList = int.Parse(lowestTempInput);
+            airTempToList = int.Parse(airTempInput);
 
             Console.WriteLine("How much rainfall(mm) was it today?");
             string rainfallInput = Console.ReadLine();
@@ -129,26 +122,30 @@ public class UserHandling {
             Console.WriteLine("Error in user input: " + e);
         }
 
-        /// When adding new entry to log
-        /// Include time of entry
-        /// Get time from API and compare JSON data with inputted data from that time (hour)
+        try {
 
-        //TimeSpan currentTime = DateTime.Now.TimeOfDay;
-        //timeToList = currentTime.ToString();
-        timeToList = string.Empty;
-
-
-        OutputDataToJson(dateToList, dayToList, timeToList, highestTempToList, lowestTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
+            DateTime currentTime = DateTime.Now;
+            DateTime nextHour = currentTime.AddHours(1);
+            nextHour = new DateTime(nextHour.Year, nextHour.Month, nextHour.Day, nextHour.Hour, 0, 0);
+            timeToList = nextHour.ToString("HH:mm:ss");
+            
+            OutputDataToJson(dateToList, dayToList, timeToList, airTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
+        
+        } catch (Exception e) {
+            Console.WriteLine("Error in comparing data from API: " + e);
+        }
+    
+        return weatherLog;
+    
     }
 
-    public static void OutputDataToJson(string dateInput, string dayInput, string timeInput, int higestTempInput, int lowerTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
+    public static void OutputDataToJson(string dateInput, string dayInput, string timeInput, int airTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
         try {
             weatherLog.Add(new Day(){
                 date = dateInput,
                 day = dayInput,
                 time = timeInput,
-                highestTemp = higestTempInput,
-                lowestTemp = lowerTempInput,
+                airTemp = airTempInput,
                 rainfall = rainfallInput, 
                 wind = windInput,
                 sunny = sunnyInput,
@@ -211,8 +208,7 @@ public class UserHandling {
         public string date {get; set;} = string.Empty;
         public string day {get; set;} = string.Empty;
         public string time {get; set;} = string.Empty;
-        public int highestTemp {get; set;}
-        public int lowestTemp {get; set;}
+        public int airTemp {get; set;}
         public double rainfall {get; set;}
         public double wind {get; set;}
         public bool sunny {get; set;}

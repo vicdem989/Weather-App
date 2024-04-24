@@ -5,22 +5,25 @@ using jsonhandling;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using jsonhandling;
 
 public class Program {
 
+    public static List<UserHandling.Day> lastLogInput = new List<UserHandling.Day>();
+
     static void Main(string[] args) {
 
-        //MainAsync();
+        MainAsync();
 
-        //MainAsync().GetAwaiter().GetResult();
+        MainAsync().GetAwaiter().GetResult();
         
 
         Console.WriteLine("Do you want to add singular or multiple entries to your log?");
         string amountEntriesAnswer = Console.ReadLine().ToLower();
         if(amountEntriesAnswer == "singular") {
-            UserHandling.AddSingularEntry();
+            lastLogInput = UserHandling.AddSingularEntry();
         }
+
+        RunComparison(lastLogInput);
 
         JsonHandling.ReadJson();
     
@@ -29,8 +32,10 @@ public class Program {
 
     public static async Task MainAsync() {
         await ApiConnection.TestApi();
-        await ApiConnection.GetTemperatureForSpecificTime();
-        await ApiConnection.GetWindForSpecificTime();
+    }
+
+    public static async Task RunComparison(List<UserHandling.Day> lastLog) {
+        await ApiConnection.GetTemperatureForSpecificTime(lastLog);
     }
 }
 

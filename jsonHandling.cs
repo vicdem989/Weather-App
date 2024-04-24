@@ -17,14 +17,13 @@ public class JsonHandling {
 
     public static string jsonFilePath = "WeatherLog.json";
     public static async void ReadJson() {
-            
             try {
                 string jsonString = File.ReadAllText(jsonFilePath);
 
                 UserHandling.Day[] days = JsonSerializer.Deserialize<UserHandling.Day[]>(jsonString);
 
                 foreach (UserHandling.Day day in days) {
-                    Console.WriteLine($"Date: {day.date}, Day: {day.day}, Higest temperature: {day.highestTemp}, Lowest temperature: {day.lowestTemp}, Rainfall: {day.rainfall}mm, Wind: {day.highestTemp}m/s, Sunny: {day.sunny}, Cloudy: {day.cloudy}");
+                    Console.WriteLine($"Date: {day.date}, Day: {day.day}, Time: {day.time}, Air temperature: {day.airTemp}, Rainfall: {day.rainfall}mm, Wind: {day.wind}m/s, Sunny: {day.sunny}, Cloudy: {day.cloudy}");
 
                 }
             } catch (Exception e) {

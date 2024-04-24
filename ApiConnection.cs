@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Text.Json;
 using program;
+using userHandling;
 namespace apiconnection;
 
 public class ApiConnection {
@@ -22,7 +24,7 @@ public class ApiConnection {
         //Need to add access header thingy
 
         try {
-            HttpResponseMessage response = await client.GetAsync("compact?lat=" + grimstadCoordLat + "&lon=" + grimstadCoordLon);
+            HttpResponseMessage response = await client.GetAsync("complete?lat=" + grimstadCoordLat + "&lon=" + grimstadCoordLon);
 
             if (response.IsSuccessStatusCode) {
                 responseBody = await response.Content.ReadAsStringAsync();
@@ -39,7 +41,35 @@ public class ApiConnection {
           
     }
 
-    public static async Task GetTemperatureForSpecificTime() {
+    public static async Task GetTemperatureForSpecificTime(List<UserHandling.Day> lastLogInput) {
+        
+        string dateFromUser = string.Empty;
+        string timeFromUser = string.Empty;
+
+        /*
+        
+        string airTempFromUser = string.Empty;
+        string rainfallFromUser = string.Empty;
+        string windFromUser = string.Empty;
+        string rainfall = string.Empty;
+        string sunnyFromUser = string.Empty;
+        string cloudyFromUser = string.Empty;
+        
+        */
+
+        foreach(UserHandling.Day day in lastLogInput) {
+            dateFromUser = day.date;
+            timeFromUser = day.time;
+        }
+
+        DateTime originalDate;
+        if (DateTime.TryParseExact(dateFromUser, "dd/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out originalDate)) {
+            dateFromUser = originalDate.ToString("yyyy-MM-dd");
+        }
+        else {
+            Console.WriteLine("Failed to parse the date.");
+        }
+
         using (JsonDocument doc = JsonDocument.Parse(responseBody)) {
             JsonElement root = doc.RootElement;
             JsonElement timeseriesArray = root.GetProperty("properties").GetProperty("timeseries");
@@ -48,7 +78,7 @@ public class ApiConnection {
             using (var enumerator = timeseriesArray.EnumerateArray()) {
                 while (enumerator.MoveNext()) {
                     var currentEntry = enumerator.Current;
-                    if (currentEntry.GetProperty("time").GetString() == "2024-04-23T20:00:00Z") {
+                    if (currentEntry.GetProperty("time").GetString() == dateFromUser + "T" + timeFromUser + "Z") {
                         entry = currentEntry;
                         break;
                     }
@@ -57,37 +87,14 @@ public class ApiConnection {
 
             if (!entry.Equals(default)) {
                 double temperature = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("air_temperature").GetDouble();
-                Console.WriteLine($"Temperature at 20:00:00: {temperature}°C");
+                Console.WriteLine($"Temperature at 12:00:00: {temperature}°C on {dateFromUser}");
             } else {
                 Console.WriteLine("Temperature data not available for 20:00:00.");
             }
         }
     }
 
-    public static async Task GetWindForSpecificTime() {
-        using (JsonDocument doc = JsonDocument.Parse(responseBody)) {
-            JsonElement root = doc.RootElement;
-            JsonElement timeseriesArray = root.GetProperty("properties").GetProperty("timeseries");
 
-            JsonElement entry = default;
-            using (var enumerator = timeseriesArray.EnumerateArray()) {
-                while (enumerator.MoveNext()) {
-                    var currentEntry = enumerator.Current;
-                    if (currentEntry.GetProperty("time").GetString() == "2024-04-23T19:00:00Z") {
-                        entry = currentEntry;
-                        break;
-                    }
-                }
-            }
-
-            if (!entry.Equals(default)) {
-                double wind = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("wind_speed").GetDouble();
-                Console.WriteLine($"Wind at 20:00:00: {wind}");
-            } else {
-                Console.WriteLine("Temperature data not available for 20:00:00.");
-            }
-        }
-    }
 
 
 }
