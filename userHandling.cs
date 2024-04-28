@@ -14,7 +14,6 @@ public class UserHandling {
 
     private static List<string> daysOfTheWeek = new List<string>() {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
     private static List<string> decisionForDays = new List<string>() {"today", "tomorrow", "yesterday"};
-    public static List<Day> weatherLog = new List<Day>();
 
     #endregion
 
@@ -37,7 +36,8 @@ public class UserHandling {
 
     #region Functions for entry of data
 
-    public static List<Day> AddSingularEntry() {
+    public static List<Day> AddEntryToLog() {
+        List<Day> weatherLog = new List<Day>();
         try {
             Console.WriteLine("What day do you want to add to the log?");
             string decision = Console.ReadLine().ToLower();
@@ -122,43 +122,23 @@ public class UserHandling {
             Console.WriteLine("Error in user input: " + e);
         }
 
-        try {
+        DateTime currentTime = DateTime.Now;
+        DateTime nextHour = currentTime.AddHours(1);
+        nextHour = new DateTime(nextHour.Year, nextHour.Month, nextHour.Day, nextHour.Hour, 0, 0);
+        timeToList = nextHour.ToString("HH:mm:ss");
 
-            DateTime currentTime = DateTime.Now;
-            DateTime nextHour = currentTime.AddHours(1);
-            nextHour = new DateTime(nextHour.Year, nextHour.Month, nextHour.Day, nextHour.Hour, 0, 0);
-            timeToList = nextHour.ToString("HH:mm:ss");
-            
-            OutputDataToJson(dateToList, dayToList, timeToList, airTempToList, rainfallToList, windToList, sunnyToList, cloudyToList);
-        
-        } catch (Exception e) {
-            Console.WriteLine("Error in comparing data from API: " + e);
-        }
-    
+        weatherLog.Add(new Day(){
+                date = dateToList,
+                day = dayToList,
+                time = timeToList,
+                airTemp = airTempToList,
+                rainfall = rainfallToList, 
+                wind = windToList,
+                sunny = sunnyToList,
+                cloudy = cloudyToList
+            });    
         return weatherLog;
     
-    }
-
-    public static void OutputDataToJson(string dateInput, string dayInput, string timeInput, int airTempInput, double rainfallInput, double windInput, bool sunnyInput, bool cloudyInput) {
-        try {
-            weatherLog.Add(new Day(){
-                date = dateInput,
-                day = dayInput,
-                time = timeInput,
-                airTemp = airTempInput,
-                rainfall = rainfallInput, 
-                wind = windInput,
-                sunny = sunnyInput,
-                cloudy = cloudyInput
-            });
-
-            JsonHandling.OutputDataToJson(weatherLog);
-
-        } catch (Exception e) {
-            Console.WriteLine("Error when outputting to json file", e);
-        }
-
-        
     }
 
     #endregion

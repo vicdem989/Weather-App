@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "jODCwtn0XOumby4ke8hIHmoqupylYPuCXDVzik9qlnNespNG41dXzGzvtyH63piO9Z2MEZZsqQgmTzsr+VVtig==",
+  "dgSpecHash": "dfhkhR2hx7V98axE7OjAIgxzuEHcVVVAnmPD2KyYzd3epND3ppPbB4hESUNR5mIp6YJnztFHB+Hsr90OHR4LxA==",
   "success": true,
   "projectFilePath": "C:\\Users\\vicde\\Downloads\\Weather-App\\WeatherApp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\vicde\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.18\\microsoft.netcore.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\vicde\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.18\\microsoft.windowsdesktop.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\vicde\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.18\\microsoft.aspnetcore.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\vicde\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.18\\microsoft.netcore.app.host.win-x64.7.0.18.nupkg.sha512"
+  ],
   "logs": []
 }

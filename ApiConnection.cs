@@ -9,7 +9,7 @@ public class ApiConnection {
     
     public static string responseBody = string.Empty;
 
-    public static async Task TestApi() {
+    public static async Task GetAPIData() {
 
         string grimstadCoordLat = "58.3421";
         string grimstadCoordLon = "8.5945";
@@ -41,27 +41,18 @@ public class ApiConnection {
           
     }
 
-    public static async Task GetTemperatureForSpecificTime(List<UserHandling.Day> lastLogInput) {
+    public static async Task GetDataFromAPI(List<UserHandling.Day> lastLogInput) {
         
         string dateFromUser = string.Empty;
         string timeFromUser = string.Empty;
-
-        /*
-        
-        string airTempFromUser = string.Empty;
-        string rainfallFromUser = string.Empty;
-        string windFromUser = string.Empty;
-        string rainfall = string.Empty;
-        string sunnyFromUser = string.Empty;
-        string cloudyFromUser = string.Empty;
-        
-        */
+        string dayFromUser = string.Empty;
 
         foreach(UserHandling.Day day in lastLogInput) {
             dateFromUser = day.date;
             timeFromUser = day.time;
+            dayFromUser = day.day;
         }
-
+        
         DateTime originalDate;
         if (DateTime.TryParseExact(dateFromUser, "dd/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out originalDate)) {
             dateFromUser = originalDate.ToString("yyyy-MM-dd");
@@ -69,7 +60,7 @@ public class ApiConnection {
         else {
             Console.WriteLine("Failed to parse the date.");
         }
-
+    
         using (JsonDocument doc = JsonDocument.Parse(responseBody)) {
             JsonElement root = doc.RootElement;
             JsonElement timeseriesArray = root.GetProperty("properties").GetProperty("timeseries");
@@ -86,15 +77,16 @@ public class ApiConnection {
             }
 
             if (!entry.Equals(default)) {
-                double temperature = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("air_temperature").GetDouble();
-                Console.WriteLine($"Temperature at 12:00:00: {temperature}°C on {dateFromUser}");
+                double airTemp = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("air_temperature").GetDouble();
+                double rainfall = entry.GetProperty("data").GetProperty("next_1_hours").GetProperty("details").GetProperty("precipitation_amount").GetDouble();
+                double wind = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("wind_speed").GetDouble();
+                double sunny = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("ultraviolet_index_clear_sky").GetDouble();
+                double cloudy = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("cloud_area_fraction").GetDouble();
+                Console.WriteLine($"Date: {dateFromUser}, Day: {dayFromUser}, Time: {timeFromUser}, Air temperature: {airTemp}, Rainfall: {rainfall}mm, Wind: {wind}m/s, Sunny: {sunny*100}%, Cloudy: {cloudy}%");;
             } else {
-                Console.WriteLine("Temperature data not available for 20:00:00.");
+                Console.WriteLine($"Temperature data not available for {timeFromUser}.");
             }
         }
     }
-
-
-
-
+    
 }

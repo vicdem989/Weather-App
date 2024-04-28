@@ -12,3 +12,4 @@ C:\Users\vicde\Downloads\Weather-App\obj\Debug\net7.0\refint\WeatherApp.dll
 C:\Users\vicde\Downloads\Weather-App\obj\Debug\net7.0\WeatherApp.pdb
 C:\Users\vicde\Downloads\Weather-App\obj\Debug\net7.0\WeatherApp.genruntimeconfig.cache
 C:\Users\vicde\Downloads\Weather-App\obj\Debug\net7.0\ref\WeatherApp.dll
+C:\Users\vicde\Downloads\Weather-App\obj\Debug\net7.0\WeatherApp.sourcelink.json
