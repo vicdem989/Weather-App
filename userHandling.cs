@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using apiconnection;
 using jsonhandling;
+using helperFunctions;
 using program;
 
 namespace userHandling;
@@ -62,7 +63,7 @@ public class UserHandling {
                 Console.WriteLine("What is the date of the day you want to add? dd/mm/yyyy");
                 string dateInput = Console.ReadLine().ToLower();
 
-                while(!VerifyDateFormat(dateInput)) {
+                while(!HelperFunctions.VerifyDateFormat(dateInput)) {
                     Console.WriteLine("Input correct format for date, dd/mm/yyyy");
                     dateInput = Console.ReadLine().ToLower();
                 }
@@ -78,7 +79,7 @@ public class UserHandling {
         
             Console.WriteLine("What is the air temp(c) currently");
             string airTempInput = Console.ReadLine();
-            while(!VerifyIntInput(airTempInput)) {
+            while(!HelperFunctions.VerifyIntInput(airTempInput)) {
                 Console.WriteLine("Not a valid int input!");
                 airTempInput = Console.ReadLine(); 
             } 
@@ -86,7 +87,7 @@ public class UserHandling {
 
             Console.WriteLine("How much rainfall(mm) was it today?");
             string rainfallInput = Console.ReadLine();
-            while(!VerifyIntInput(rainfallInput)) {
+            while(!HelperFunctions.VerifyIntInput(rainfallInput)) {
                 Console.WriteLine("Not a valid double input!");
                 rainfallInput = Console.ReadLine(); 
             } 
@@ -94,7 +95,7 @@ public class UserHandling {
 
             Console.WriteLine("How much wind(m/s) was it today?");
             string windInput = Console.ReadLine();
-            while(!VerifyIntInput(windInput)) {
+            while(!HelperFunctions.VerifyIntInput(windInput)) {
                 Console.WriteLine("Not a valid double input!");
                 windInput = Console.ReadLine(); 
             } 
@@ -102,7 +103,7 @@ public class UserHandling {
 
             Console.WriteLine("Was it sunny? true/false");
             string sunnyInput = Console.ReadLine();
-            while(!VerifyBoolInput(sunnyInput)) {
+            while(!HelperFunctions.VerifyBoolInput(sunnyInput)) {
                 Console.WriteLine("Not a valid boolean input!");
                 sunnyInput = Console.ReadLine(); 
             } 
@@ -110,7 +111,7 @@ public class UserHandling {
 
             Console.WriteLine("Was it cloudy? true/false");
             string cloudyInput = Console.ReadLine();
-            while(!VerifyBoolInput(cloudyInput)) {
+            while(!HelperFunctions.VerifyBoolInput(cloudyInput)) {
                 Console.WriteLine("Not a valid boolean input!");
                 cloudyInput = Console.ReadLine(); 
             } 
@@ -126,7 +127,7 @@ public class UserHandling {
         DateTime nextHour = currentTime.AddHours(1);
         nextHour = new DateTime(nextHour.Year, nextHour.Month, nextHour.Day, nextHour.Hour, 0, 0);
         timeToList = nextHour.ToString("HH:mm:ss");
-
+        Console.Clear();
         weatherLog.Add(new Day(){
                 date = dateToList,
                 day = dayToList,
@@ -143,24 +144,8 @@ public class UserHandling {
 
     #endregion
 
-    #region Helper functions
-    public static bool VerifyDateFormat(string date) {
-        return date.Length == 10 && date[2] == '/' && date[5] == '/';
-    }
-
-    public static bool VerifyIntInput(string dataToBeVerified) {
-        if(int.TryParse(dataToBeVerified, out int value)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static bool VerifyBoolInput(string dataToBeVerified) {
-        if(bool.TryParse(dataToBeVerified, out bool value)) {
-            return true;
-        }
-        return false;
-    }
+    #region Add days to log 
+    
 
     public static void AddTodayToLog() {
         DayOfWeek todaysDay = DateTime.Now.DayOfWeek;

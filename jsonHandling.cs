@@ -12,14 +12,11 @@ public class JsonHandling {
     public static void CheckIfJSONExists() {
             if (File.Exists(jsonFilePath)) {
                 Program.lastLogInput = UserHandling.AddEntryToLog();
-            } else {
-                ReadJson();
-            }
+            } 
         }
 
     public static void PushListToJSON(List<UserHandling.Day> dataToBeAdded, List<UserHandling.Day> listToBeOutputted) {
-        try {
-            Console.WriteLine("COUNTING : " + dataToBeAdded.Count);
+        try {    
             if(dataToBeAdded.Count != 0) {
                 foreach(UserHandling.Day day in dataToBeAdded) {
                     listToBeOutputted.Add(new UserHandling.Day(){

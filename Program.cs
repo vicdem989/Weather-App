@@ -6,6 +6,8 @@ using jsonhandling;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using reports;
+using System.Runtime.InteropServices.Marshalling;
+using helperFunctions;
 
 public class Program {
     public static List<UserHandling.Day> weatherLog = new List<UserHandling.Day>();
@@ -17,23 +19,51 @@ public class Program {
         MainAsync();
 
         MainAsync().GetAwaiter().GetResult();
-        
-
-        
-        JsonHandling.CheckIfJSONExists();
-
-
-        RunComparison(lastLogInput);
 
         JsonHandling.ReadJson();
-
-        JsonHandling.PushListToJSON(lastLogInput, weatherLog);
-
-        Reports.reportDay(weatherLog, "31/04/2024");
-        Reports.reportPastWeek(weatherLog);
-        Reports.reportPastXDays(weatherLog, 30);
-    
         
+        Console.WriteLine("Do you want to add a new entry to the log? yes/no");
+        if(Console.ReadLine().ToLower() == "yes") { 
+            JsonHandling.CheckIfJSONExists();
+            RunComparison(lastLogInput);
+            Console.WriteLine("");
+            JsonHandling.PushListToJSON(lastLogInput, weatherLog);
+            
+        } 
+
+        Console.Clear();
+
+        Console.WriteLine("Do you want a day report? yes/no");
+        if(Console.ReadLine().ToLower() == "yes") { 
+            Console.WriteLine("What day do you want to see the report of? dd/mm/yyyy");
+            string dayToReport = Console.ReadLine();
+            while(!HelperFunctions.VerifyDateFormat(dayToReport)) {
+                Console.WriteLine("Enter correct format!");
+            }
+            Console.Clear();
+            Reports.reportDay(weatherLog, dayToReport);
+        }
+
+
+        Console.WriteLine("Do you want a week report? yes/no");
+        if(Console.ReadLine().ToLower() == "yes") { 
+            Reports.reportPastWeek(weatherLog);
+        }
+
+
+        Console.WriteLine("Do you want a report for more than a week? yes/no");
+        if(Console.ReadLine().ToLower() == "yes") { 
+            Console.WriteLine("How many days?");
+            int amountDays = 0;
+            string inputDays = Console.ReadLine();
+            while (!int.TryParse(inputDays, out amountDays)) {
+                Console.WriteLine("Input integer please.");
+                inputDays = Console.ReadLine();
+            }
+            Reports.reportPastXDays(weatherLog, amountDays);
+            }
+
+                
     }
 
     public static async Task MainAsync() {

@@ -22,8 +22,19 @@ public class Reports {
     }
 
     public static void reportPastWeek(List<UserHandling.Day> weatherLog) { 
-        Console.WriteLine("Report for the past 7 days:");
-        for (int i = 0; i < 7; i++) {
+        int daysToReport = 7;
+        if(weatherLog.Count < daysToReport) {
+            Console.WriteLine($"There are not seven entries, only {weatherLog.Count}.");
+            Console.WriteLine("Do you want the report of those days? yes/no");
+            string userResponse = Console.ReadLine().ToLower();
+            if(userResponse == "yes") {
+                daysToReport = weatherLog.Count;
+            }
+        }
+        
+        Console.Clear();
+        Console.WriteLine($"Report for the past {daysToReport} days:");
+        for (int i = 0; i < daysToReport; i++) {
             Console.WriteLine($"Date: {weatherLog[i].date}, Day: {weatherLog[i].day}, Time: {weatherLog[i].time}, Air temperature: {weatherLog[i].airTemp}, Rainfall: {weatherLog[i].rainfall}mm, Wind: {weatherLog[i].wind}m/s, Sunny: {weatherLog[i].sunny}, Cloudy: {weatherLog[i].cloudy}");
         }
     }

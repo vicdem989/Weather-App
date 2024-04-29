@@ -84,7 +84,7 @@ public class ApiConnection {
                 double cloudy = entry.GetProperty("data").GetProperty("instant").GetProperty("details").GetProperty("cloud_area_fraction").GetDouble();
                 Console.WriteLine($"Date: {dateFromUser}, Day: {dayFromUser}, Time: {timeFromUser}, Air temperature: {airTemp}, Rainfall: {rainfall}mm, Wind: {wind}m/s, Sunny: {sunny*100}%, Cloudy: {cloudy}%");;
             } else {
-                Console.WriteLine($"Temperature data not available for {timeFromUser}.");
+                Console.WriteLine($"Data data not available!");
             }
         }
     }
